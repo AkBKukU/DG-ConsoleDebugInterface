@@ -18,7 +18,7 @@ The purpose of this software is to provide a software front-end to the Console D
 
 
 ## References
-- **[microNOVA Programmers Programmers](http://www.novasareforever.org/user/archive/public/docs/dg/hw/cpu/microNOVA/015-000050-00__microNOVA_Computer_Programmers_Reference__1976.002.pdf)**
+- **[microNOVA Programmers Reference](http://www.novasareforever.org/user/archive/public/docs/dg/hw/cpu/microNOVA/015-000050-00__microNOVA_Computer_Programmers_Reference__1976.002.pdf)**
 - - **Page 45:** The operation of the console debug interface
 - [microNOVA Technical Reference](http://www.novasareforever.org/user/archive/public/docs/dg/hw/cpu/microNOVA/014-000073-03__microNOVA_Computer_Systems_Technical_Reference__1977-Jan.pdf)
 - - **Page 14:** The console debug ROM resides in address range 0o77400-0o77777
