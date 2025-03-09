@@ -86,7 +86,7 @@ class DGnovaMicro(SerialWrapper):
                 if end==0:
                         end=start+count
 
-                data = dg.address_read_range(start,end=end)
+                data = self.address_read_range(start,end=end)
 
                 with open(filename, "wb") as w:
                         for value in data:
