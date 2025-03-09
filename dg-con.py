@@ -3,6 +3,7 @@ import serial
 import json
 import re
 import struct
+import os
 
 class SerialWrapper(object):
 
@@ -60,12 +61,22 @@ class DGnovaMicro(SerialWrapper):
                 self.write(data)
                 self.write(self.cmd_next)
                 result = self.read()
-                data_num+=1
+                return
 
-                data=str(oct(data_num)).replace("0o","")
-                self.write(data)
-                self.write(self.cmd_next)
-                result = self.read()
+
+        def address_write_file(self,address,filename):
+
+                self.address_read(address)
+                count = os.path.getsize(filename)/2
+
+                with open(filename, "rb") as f:
+                        while count:
+                                data=str(oct(struct.unpack('<H', f.read(2))[0])).replace("0o","")
+                                self.write(data)
+                                self.write(self.cmd_next)
+                                result = self.read()
+                                count-=2
+
                 return
 
         def address_read_range(self,start,end=0,count=0):
@@ -93,21 +104,8 @@ class DGnovaMicro(SerialWrapper):
                                 w.write(struct.pack('<H', value))
 
 
-        def address_write_file(self,start,filename):
-                responses=[]
-                if end==0:
-                        end=start+count
-
-                # Set starting address
-
-                for address in range(start,end):
-                        result=self.address_read(address)
-                        responses.append(result)
-
-                return responses
-
 dg = DGnovaMicro(serial_port="/dev/ttyUSB1")
 
-dg.address_read_range_file(0o77400,"test.bin", end=0o77500)
+dg.address_write_file(0o200,"ROM-bottom.bin")
 
 
