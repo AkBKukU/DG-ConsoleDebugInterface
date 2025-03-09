@@ -53,6 +53,21 @@ class DGnovaMicro(SerialWrapper):
                 print({address:result})
                 return int(result,8)
 
+        def address_write(self,address, data):
+                data_num=data
+                self.address_read(address)
+                data=str(oct(data)).replace("0o","")
+                self.write(data)
+                self.write(self.cmd_next)
+                result = self.read()
+                data_num+=1
+
+                data=str(oct(data_num)).replace("0o","")
+                self.write(data)
+                self.write(self.cmd_next)
+                result = self.read()
+                return
+
         def address_read_range(self,start,end=0,count=0):
                 responses=[]
                 if end==0:
@@ -66,23 +81,33 @@ class DGnovaMicro(SerialWrapper):
 
                 return responses
 
+        def address_read_range_file(self,start,filename,end=0,count=0):
+
+                if end==0:
+                        end=start+count
+
+                data = dg.address_read_range(start,end=end)
+
+                with open(filename, "wb") as w:
+                        for value in data:
+                                w.write(struct.pack('<H', value))
+
+
+        def address_write_file(self,start,filename):
+                responses=[]
+                if end==0:
+                        end=start+count
+
+                # Set starting address
+
+                for address in range(start,end):
+                        result=self.address_read(address)
+                        responses.append(result)
+
+                return responses
+
 dg = DGnovaMicro(serial_port="/dev/ttyUSB1")
-out_file = open("ROM-bottom.json", "w")
+
+dg.address_read_range_file(0o77400,"test.bin", end=0o77500)
 
 
-data = dg.address_read_range(0o77400,end=0o77557)
-
-with open("ROM-bottom.bin", "wb") as w:
-        for value in data:
-                w.write(struct.pack('<H', value))
-
-
-json.dump(data, out_file, indent = 6)
-
-out_file = open("ROM-top.json", "w")
-data = dg.address_read_range(0o77600,end=0o77777)
-
-with open("ROM-top.bin", "wb") as w:
-        for value in data:
-                w.write(struct.pack('<H', value))
-json.dump(data, out_file, indent = 6)
