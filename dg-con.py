@@ -83,6 +83,8 @@ class DGnovaMicro(SerialWrapper):
                 responses=[]
                 if end==0:
                         end=start+count
+                else:
+                        end+=1
 
                 # Set starting address
 
