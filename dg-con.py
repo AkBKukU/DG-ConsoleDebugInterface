@@ -145,15 +145,15 @@ def main():
         parser.add_argument('-e', '--end', help="End address(in Octal) for RAM dump", default=None)
         parser.add_argument('-l', '--length', help="Count of addresses for RAM dump", default=1)
         parser.add_argument('-c', '--command', help="Command or data to send before receiving data back", default=None)
-        parser.add_argument('-x', '--execute', help="Character to send to execute command. Sent after data in --command", default="\n")
+        parser.add_argument('-x', '--execute', help="Character to send to execute command. Sent after data in --command", default="\r")
         parser.add_argument('-w', '--receive', help="File to receive data into from Data General", default=None)
         parser.add_argument('-v', '--verbose', help="Output additional information to stderr about activity",action='store_true')
 
         parser.add_argument('-p', '--port', help="Serial: Port to communicate over", default="/dev/ttyUSB0")
         parser.add_argument('-b', '--buad', help="Serial: Baud rate", default=9600)
-        parser.add_argument('-d', '--databits', help="Serial: Data bits count", choices=[7,8], default=8)
+        parser.add_argument('-d', '--databits', help="Serial: Data bits count", choices=["7","8"], default=8)
         parser.add_argument('-a', '--parity', help="Serial: Parity", choices=["O","E","N"], default="N")
-        parser.add_argument('-o', '--stopbits', help="Serial: Stop bit count", choices=[1,2], default=1)
+        parser.add_argument('-o', '--stopbits', help="Serial: Stop bit count", choices=["1","2"], default=1)
 
 
         parser.add_argument('input', nargs='?', help="File to send to Data General", default=None)
@@ -162,10 +162,10 @@ def main():
         ser = serial.Serial(
                 args.port,
                 args.buad,
-                timeout=0.1,
-                bytesize=args.databits,
+                timeout=1,
+                bytesize=int(args.databits),
                 parity=args.parity,
-                stopbits=args.stopbits
+                stopbits=int(args.stopbits)
                 )
 
         dg = DGnovaMicro(ser)
